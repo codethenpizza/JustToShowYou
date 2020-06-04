@@ -1,26 +1,40 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import 'mobx-react-lite/batchingForReactDom'
+import {BrowserRouter, Switch, Route} from "react-router-dom";
+import styled, {ThemeProvider} from "styled-components"
+import {theme} from "./theme/Theme";
+import {Provider} from "mobx-react";
+import {RootStore} from "./stores/rootStore";
 
-function App() {
+//pages
+import DashboardPage from "./pages/DashboardPage";
+import CreatePostPage from "./pages/CreatePostPage";
+//components
+import Menu from "./components/Menu";
+
+const MainContentWrapper = styled.div`
+  margin-left: 60px;
+`;
+
+const rootStore: RootStore = new RootStore();
+
+const APP: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <Provider rootStore={rootStore}>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <Menu/>
+          <MainContentWrapper>
+            <Switch>
+              <Route component={DashboardPage} path='/' exact/>
+              <Route component={CreatePostPage} path='/createPost'/>
+            </Switch>
+          </MainContentWrapper>
+        </BrowserRouter>
+      </ThemeProvider>
+    </Provider>
+  )
+};
 
-export default App;
+export default APP
+
